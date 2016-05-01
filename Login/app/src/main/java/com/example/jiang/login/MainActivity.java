@@ -1,5 +1,6 @@
 package com.example.jiang.login;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         final CheckBox checkBox = (CheckBox)findViewById(R.id.cb_remember);
 
         //设置用户保存数据
-        Map<String ,String > maps = UserInfoUtils.readInfo();
+        Map<String ,String > maps = UserInfoUtils.readInfo(MainActivity.this);
         if (maps!=null){
             userName.setText(maps.get("name"));
             passWord.setText(maps.get("pwd"));
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     if (checkBox.isChecked()){
                         //记住密码并提示
-                        if (UserInfoUtils.saveInfo(userNameStr,pwStr)){
+                        if (UserInfoUtils.saveInfo(MainActivity.this,userNameStr,pwStr)){
                             Toast.makeText(MainActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                         }else {
                             Toast.makeText(MainActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
