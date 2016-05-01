@@ -1,6 +1,7 @@
 package com.example.jiang.login;
 
 import android.content.Context;
+import android.os.Environment;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,10 +22,14 @@ public class UserInfoUtils {
         try {
 //            String path = context.getFilesDir().getPath();
             String info = username+"#####"+pwd;
-            //指定文件存储位置
-//            File file = new File("/data/data/com.example.jiang.login/info.txt");
-//            File file = new File(path,"info.txt");
 
+            //把数据保存到/data/包名下
+            //指定文件存储位置
+//
+            //把数据保存到SD卡
+            String path = Environment.getExternalStorageDirectory().getPath();
+//            File file = new File("/data/data/com.example.jiang.login/info.txt");
+            File file = new File(path,"info.txt");
             //创建文件输出流
 //            FileOutputStream fos = new FileOutputStream(file);
             //通过上下文获取输出流
