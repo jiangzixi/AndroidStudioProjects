@@ -1,31 +1,55 @@
 package com.example.jiangzixi.listview;
 
-import android.database.DataSetObserver;
-import android.os.StrictMode;
-import android.provider.Settings;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button btnArr = (Button)findViewById(R.id.btn_arrAdapter);
+        btnArr.setOnClickListener(this);
+        Button btnSimple = (Button)findViewById(R.id.btn_simple);
+        btnSimple.setOnClickListener(this);
+        Button btnQZ = (Button)findViewById(R.id.btn_qz);
+        btnQZ.setOnClickListener(this);
         //tableview
         ListView lv = (ListView)findViewById(R.id.lv);
         //显示数据 和其他普通控件有点区别 数据来源于数据适配器
         lv.setAdapter(new MyListAdapter());
     }
 
-    private class MyListAdapter extends BaseAdapter{
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_arrAdapter:{
+                ArrAdapterVC vc = new ArrAdapterVC();
+                Intent intent = new Intent(MainActivity.this,vc.getClass());
+                startActivity(intent);
+                break;
+            }case R.id.btn_simple:{
+                simpleVC vc = new simpleVC();
+                Intent intent = new Intent(MainActivity.this,vc.getClass());
+                startActivity(intent);
+                break;
+            }case R.id.btn_qz:{
+                quanzhongVC qz = new quanzhongVC();
+                Intent intent = new Intent(MainActivity.this,qz.getClass());
+                startActivity(intent);
+                break;
+            }
+        }
+    }
+        private class MyListAdapter extends BaseAdapter{
 
         //行数numberOfRowsInSection
         @Override
@@ -59,11 +83,17 @@ public class MainActivity extends AppCompatActivity {
             //把自定义布局转换成一个view对象
             View newView;
             if (view==null){
-                newView = View.inflate(getApplicationContext(),R.layout.layout,null);
+                //获取打气筒服务
+                //1  简单
+//                newView = View.inflate(getApplicationContext(),R.layout.layout,null);
+                //2
+//                newView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout,null);
+                //3  使用频率相对高  谷歌内部使用
+                LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                newView = inflater.inflate(R.layout.layout,null);
             }else {
                 newView = view;
             }
-
             return newView;
         }
     }

@@ -4,11 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.jiangzixi.listview.MainActivity">
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_arrAdapter"
+        android:text="Arr"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_simple"
+        android:text="simple"
+        android:layout_toRightOf="@id/btn_arrAdapter"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="权重"
+        android:id="@+id/btn_qz"
+        android:layout_toRightOf="@id/btn_simple"/>
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fastScrollAlwaysVisible="true"
+        android:layout_below="@id/btn_arrAdapter"
         android:id="@+id/lv"></ListView>
 
 </RelativeLayout>
