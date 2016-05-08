@@ -1,5 +1,8 @@
 package com.example.jiangzixi.sourceviewer;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,44 +18,70 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+    //在主线程中定义一个Handler
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            TextView tv = (TextView) findViewById(R.id.tv);
+            tv.setText(msg.obj.toString());
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button btn = (Button)findViewById(R.id.btn);
         btn.setOnClickListener(this);
+
+        //打印当前线程名字
+        System.out.println("当前线程名字"+Thread.currentThread().getName());
     }
 
     @Override
     public void onClick(View v) {
 //        TextView tv = (TextView) findViewById(R.id.tv);
 //        tv.setText("");
-        //这里有bug 子线程无法刷新UI
-        new Thread() {
-            @Override
-            public void run() {
-                //获取源码属性
-                EditText et = (EditText) findViewById(R.id.et);
-                TextView tv = (TextView) findViewById(R.id.tv);
-                String urlStr = et.getText().toString();
-                //把网络访问的代码放在这里
-                try {
-                    URL url = new URL(urlStr);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("GET");//GET POST
-                    connection.setConnectTimeout(10);
-                    int responseCode = connection.getResponseCode();
-                    if (responseCode == 200) {
-                        //获取服务器数据 服务器以流形式返回
-                        InputStream stream = connection.getInputStream();
-                        //把流转化为字符串
-                        String str = StreamTools.readStream(stream);
-                        tv.setText(str);
+        switch (v.getId()){
+            case R.id.btn:{
+                //这里有bug 子线程无法刷新UI
+                new Thread() {
+                    @Override
+                    public void run() {
+                        //获取源码属性
+                        EditText et = (EditText) findViewById(R.id.et);
+                        String urlStr = et.getText().toString();
+                        //把网络访问的代码放在这里
+                        try {
+                            URL url = new URL(urlStr);
+                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                            connection.setRequestMethod("GET");//GET POST
+                            connection.setConnectTimeout(10000);
+                            int responseCode = connection.getResponseCode();
+                            if (responseCode == 200) {
+                                //获取服务器数据 服务器以流形式返回
+                                InputStream stream = connection.getInputStream();
+                                //把流转化为字符串
+                                String str = StreamTools.readStream(stream);
+                                //更新UI
+                                Message msg = new Message();
+                                msg.obj = str;
+                                handler.sendMessage(msg);
+
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
+                }.start();
+            }case R.id.btn_sleep:{
+                try {
+                    Thread.sleep(10);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }.start();
+        }
     }
 }
