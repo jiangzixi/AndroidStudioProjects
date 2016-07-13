@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                textView = (TextView) findViewById(R.id.tv);
                 textView.setText("helloWorld");
                 System.out.println("延时执行5s");
             }
